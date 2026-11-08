@@ -140,7 +140,8 @@ class TrainingState:
             step=0,
             model_state=model_state,
             opt_state=opt_state,
-            swa_state=model_state,
+            # Copied because train_step donates jit_state, so no aliasing.
+            swa_state=jax.tree.map(jnp.copy, model_state),
             num_averages=0.0,
         )
         return TrainingState(
